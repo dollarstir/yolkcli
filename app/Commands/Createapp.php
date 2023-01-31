@@ -55,9 +55,19 @@ class Createapp extends Command
         // shell_exec('unzip '.$local_file.' -d '.$path);
         shell_exec(' curl https://phpyolk.com/Archive.zip --progress-bar  --output '.$projectname.'.zip');
         $this->info('Unzipping........');
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            if(!is_dir($path.'/'.$projectname))
+            {
+                mkdir($path.'/'.$projectname, 0777);
+            }
+        $this->info('Copying files........');
+        shell_exec('tar -zxvf' .$projectname.'.zip -C' .$path .'/'.$projectname); 
+        $this->info('setting up yolk environment........');
+        shell_exec( 'Del '.$projectname.'.zip');
+    } else {
         shell_exec('unzip '.$projectname.'.zip -d '.$path.'/'.$projectname);
-        shell_exec('rm '.$projectname.'.zip');
-
+         shell_exec('rm '.$projectname.'.zip');
+    }
         $this->info('Done!');
         $this->info('Your new app is ready to go!');
         $this->info('To run your app, cd into the directory '.$projectname.' and start your server with php -S localhost:8000');
